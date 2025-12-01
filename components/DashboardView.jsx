@@ -2,7 +2,6 @@
 
 import {
   Brain,
-  Briefcase,
   BriefcaseIcon,
   LineChart,
   TrendingDown,
@@ -12,7 +11,6 @@ import { format, formatDistanceToNow } from "date-fns";
 import { Badge } from "./ui/badge";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -23,8 +21,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Legend,
-  Rectangle,
   ResponsiveContainer,
   Tooltip,
   XAxis,
