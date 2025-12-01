@@ -77,8 +77,6 @@ export async function saveQuizResult(questions, answers, score) {
   }));
 
   const wrongAnswers = questionResults.filter((q) => !q.isCorrect);
-  // Make improvementTip available regardless of whether the user got any questions wrong
-  let improvementTip = null;
 
   if (wrongAnswers.length > 0) {
     const wrongQuestionsText = wrongAnswers
@@ -98,6 +96,7 @@ export async function saveQuizResult(questions, answers, score) {
       Keep the response under 2 sentences and make it encouraging.
       Don't explicitly mention the mistakes, instead focus on what to learn/practice.
     `;
+    let improvementTip = null;
 
     try {
       const result = await model.generateContent(improvementPrompt);
@@ -111,8 +110,7 @@ export async function saveQuizResult(questions, answers, score) {
   try {
     const assessment = await db.assessment.create({
       data: {
-        // Prisma schema uses `userId`, not `userID`
-        userId: user.id,
+        userID: user.id,
         quizScore: score,
         questions: questionResults,
         category: "Technical",
