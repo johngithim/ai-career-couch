@@ -141,6 +141,35 @@ export async function saveQuizResult(questions, answers, score) {
       score,
       questionsCount: questionResults.length,
     });
-    throw new Error(`Failed to save quiz result: ${error.message || error.code || 'Unknown error'}`);
+    throw new Error(
+      `Failed to save quiz result: ${error.message || error.code || "Unknown error"}`,
+    );
+  }
+}
+
+export async function getAssessments() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+    include: { industryInsight: true },
+  });
+
+  if (!user) throw new Error("user not found");
+
+  try {
+    const assessments = await db.assessment.findMany({
+      where: {
+        userId: user.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return assessments;
+  } catch (error) {
+    console.error("Error fetching assessments:", error);
+    throw new Error("Failed to fetch assessments");
   }
 }
