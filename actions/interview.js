@@ -68,15 +68,28 @@ export async function saveQuizResult(questions, answers, score) {
 
   if (!user) throw new Error("user not found");
 
+  if (!questions || !Array.isArray(questions)) {
+    throw new Error("Invalid questions data");
+  }
+
+  if (!answers || !Array.isArray(answers)) {
+    throw new Error("Invalid answers data");
+  }
+
+  if (typeof score !== "number" || isNaN(score)) {
+    throw new Error("Invalid score");
+  }
+
   const questionResults = questions.map((question, index) => ({
-    question: question.question,
-    answer: question.correctAnswer,
-    userAnswer: answers[index],
-    isCorrect: question.correctAnswer === answers[index],
-    explanation: question.explanation,
+    question: question?.question || "",
+    answer: question?.correctAnswer || "",
+    userAnswer: answers[index] ?? null,
+    isCorrect: question?.correctAnswer === answers[index],
+    explanation: question?.explanation || "",
   }));
 
   const wrongAnswers = questionResults.filter((q) => !q.isCorrect);
+  let improvementTip = null;
 
   if (wrongAnswers.length > 0) {
     const wrongQuestionsText = wrongAnswers
@@ -96,7 +109,6 @@ export async function saveQuizResult(questions, answers, score) {
       Keep the response under 2 sentences and make it encouraging.
       Don't explicitly mention the mistakes, instead focus on what to learn/practice.
     `;
-    let improvementTip = null;
 
     try {
       const result = await model.generateContent(improvementPrompt);
@@ -110,7 +122,7 @@ export async function saveQuizResult(questions, answers, score) {
   try {
     const assessment = await db.assessment.create({
       data: {
-        userID: user.id,
+        userId: user.id,
         quizScore: score,
         questions: questionResults,
         category: "Technical",
@@ -121,6 +133,14 @@ export async function saveQuizResult(questions, answers, score) {
     return assessment;
   } catch (error) {
     console.error("Error saving result:", error);
-    throw new Error("Failed to save quiz result");
+    console.error("Error details:", {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: user.id,
+      score,
+      questionsCount: questionResults.length,
+    });
+    throw new Error(`Failed to save quiz result: ${error.message || error.code || 'Unknown error'}`);
   }
 }
