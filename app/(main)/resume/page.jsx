@@ -1,6 +1,14 @@
 import React from "react";
+import { getResume } from "../../../actions/resume";
+import ResumeBuilder from "../../../components/ResumeBuilder";
 
-const ResumePage = () => {
-  return <div>ResumePage</div>;
+const ResumePage = async () => {
+  const resume = await getResume();
+
+  return (
+    <div className={"container mx-auto py-6"}>
+      <ResumeBuilder initialContent={resume?.content} />
+    </div>
+  );
 };
 export default ResumePage;

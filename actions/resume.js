@@ -1,3 +1,5 @@
+"use server";
+
 import { auth } from "@clerk/nextjs/server";
 import { db } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -80,6 +82,7 @@ export async function improveWithAI({ current, type }) {
     4. Keep it concise but detailed
     5. Focus on achievements over responsibilities
     6. Use industry-specific keywords
+    7. Don't make it too loud just improve in max 4 lines.
     
     Format the response as a single paragraph without any additional text or explanations.
   `;
@@ -87,7 +90,8 @@ export async function improveWithAI({ current, type }) {
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const improvedContent = response.text().trim();
+    const text = response.text();
+    const improvedContent = text.replace(/```(?:json)?\n?/g, "").trim();
     return improvedContent;
   } catch (error) {
     console.error("Error improving content:", error);
