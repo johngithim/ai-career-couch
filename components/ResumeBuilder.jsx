@@ -103,7 +103,7 @@ const ResumeBuilder = ({ initialContent }) => {
   };
 
   useEffect(() => {
-    if (saveResult && !isSaving) {
+    if (wsaveResult && !isSaving) {
       toast.success("Resume saved successfully!");
     }
 
