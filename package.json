@@ -30,6 +30,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "html2pdf": "^0.0.11",
+    "html2pdf.js": "^0.12.1",
     "inngest": "^3.46.0",
     "ldrs": "^1.1.9",
     "lucide-react": "^0.555.0",
