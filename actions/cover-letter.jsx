@@ -8,12 +8,6 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function generateCoverLetter(data) {
-  // Validate API key
-  if (!process.env.GEMINI_API_KEY) {
-    console.error("GEMINI_API_KEY is not configured");
-    throw new Error("AI service is not configured. Please contact support.");
-  }
-
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
@@ -23,33 +17,20 @@ export async function generateCoverLetter(data) {
 
   if (!user) throw new Error("User not found");
 
-  // Validate required input data
-  if (!data.companyName || !data.jobTitle || !data.jobDescription) {
-    throw new Error("Company name, job title, and job description are required");
-  }
-
-  // Prepare user data with fallbacks
-  const industry = user.industry || "Not specified";
-  const experience = user.experience ? `${user.experience} years` : "Not specified";
-  const skills = Array.isArray(user.skills) && user.skills.length > 0
-    ? user.skills.join(", ")
-    : "Not specified";
-  const bio = user.bio || "Not specified";
-
   const prompt = `
     Write a professional cover letter for a ${data.jobTitle} position at ${
       data.companyName
     }.
-
+    
     About the candidate:
-    - Industry: ${industry}
-    - Years of Experience: ${experience}
-    - Skills: ${skills}
-    - Professional Background: ${bio}
-
+    - Industry: ${user.industry}
+    - Years of Experience: ${user.experience}
+    - Skills: ${user.skills?.join(", ")}
+    - Professional Background: ${user.bio}
+    
     Job Description:
     ${data.jobDescription}
-
+    
     Requirements:
     1. Use a professional, enthusiastic tone
     2. Highlight relevant skills and experience
@@ -58,29 +39,22 @@ export async function generateCoverLetter(data) {
     5. Use proper business letter formatting in markdown
     6. Include specific examples of achievements
     7. Relate candidate's background to job requirements
-
+    
     Format the letter in markdown.
   `;
 
   try {
-    // Initialize AI model here to catch initialization errors
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
     const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const content = response.text().trim();
-
-    if (!content) {
-      throw new Error("AI service returned empty response");
-    }
+    const content =
+      result?.response?.text?.().trim() ??
+      result?.choices?.[0]?.message?.content?.trim();
 
     const coverLetter = await db.coverLetter.create({
       data: {
         content,
         jobDescription: data.jobDescription,
-        companyName: data.companyName.trim(),
-        jobTitle: data.jobTitle.trim(),
+        companyName: data.companyName,
+        jobTitle: data.jobTitle,
         status: "completed",
         userId: user.id,
       },
@@ -88,18 +62,8 @@ export async function generateCoverLetter(data) {
 
     return coverLetter;
   } catch (error) {
-    console.error("Error generating cover letter:", error);
-
-    // Provide more specific error messages
-    if (error.message?.includes("API_KEY")) {
-      throw new Error("AI service authentication failed. Please contact support.");
-    } else if (error.message?.includes("quota") || error.message?.includes("limit")) {
-      throw new Error("AI service quota exceeded. Please try again later.");
-    } else if (error.message?.includes("network") || error.message?.includes("fetch")) {
-      throw new Error("Network error. Please check your connection and try again.");
-    } else {
-      throw new Error("Failed to generate cover letter. Please try again.");
-    }
+    console.error("Error generating cover letter:", error.message);
+    throw new Error("Failed to generate cover letter");
   }
 }
 

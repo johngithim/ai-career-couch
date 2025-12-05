@@ -1,8 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
-import { Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Card,
@@ -11,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { format } from "date-fns";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,8 +22,10 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
+import { deleteCoverLetter } from "../actions/cover-letter";
+import { Eye, Trash2 } from "lucide-react";
 
-const CoverLetterList = ({ coverLetters }) => {
+export default function CoverLetterList({ coverLetters }) {
   const router = useRouter();
 
   const handleDelete = async (id) => {
@@ -110,6 +111,4 @@ const CoverLetterList = ({ coverLetters }) => {
       ))}
     </div>
   );
-};
-
-export default CoverLetterList;
+}

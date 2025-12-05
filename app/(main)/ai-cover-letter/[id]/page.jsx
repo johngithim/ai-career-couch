@@ -1,13 +1,13 @@
-import React from "react";
-import { getCoverLetter } from "../../../../actions/cover-letter";
-import { Button } from "../../../../components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { getCoverLetter } from "../../../../actions/cover-letter";
+import { Button } from "../../../../components/ui/button";
 import CoverLetterPreview from "../../../../components/CoverLetterPreview";
 
-const CoverLetter = async ({ params }) => {
+export default async function EditCoverLetterPage({ params }) {
   const { id } = await params;
   const coverLetter = await getCoverLetter(id);
+
   return (
     <div className="container mx-auto py-6">
       <div className="flex flex-col space-y-2">
@@ -26,5 +26,4 @@ const CoverLetter = async ({ params }) => {
       <CoverLetterPreview content={coverLetter?.content} />
     </div>
   );
-};
-export default CoverLetter;
+}

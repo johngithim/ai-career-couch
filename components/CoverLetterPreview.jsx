@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import MDEditor from "@uiw/react-md-editor";
 
 const CoverLetterPreview = ({ content }) => {
@@ -8,4 +9,5 @@ const CoverLetterPreview = ({ content }) => {
     </div>
   );
 };
+
 export default CoverLetterPreview;

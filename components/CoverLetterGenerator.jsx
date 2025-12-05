@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import {
   Card,
@@ -21,7 +21,7 @@ import { coverLetterSchema } from "../lib/schema";
 import useFetch from "../hooks/use-fetch";
 import { generateCoverLetter } from "../actions/cover-letter";
 
-const CoverLetterGenerator = () => {
+export default function CoverLetterGenerator() {
   const router = useRouter();
 
   const {
@@ -130,6 +130,4 @@ const CoverLetterGenerator = () => {
       </Card>
     </div>
   );
-};
-
-export default CoverLetterGenerator;
+}

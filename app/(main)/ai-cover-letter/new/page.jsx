@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "../../../../components/ui/button";
 import CoverLetterGenerator from "../../../../components/CoverLetterGenerator";
 
-const NewCoverLetterPage = () => {
+export default function NewCoverLetterPage() {
   return (
     <div className="container mx-auto py-6">
       <div className="flex flex-col space-y-2">
@@ -27,6 +27,4 @@ const NewCoverLetterPage = () => {
       <CoverLetterGenerator />
     </div>
   );
-};
-
-export default NewCoverLetterPage;
+}
