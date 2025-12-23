@@ -49,6 +49,7 @@ const OnboardingForm = ({ industries }) => {
   });
 
   const watchIndustry = watch("industry");
+
   const onSubmit = async (values) => {
     try {
       const formattedIndustry = `${values.industry}-${values.subIndustry.toLowerCase().replace(/ /g, "-")}`;
@@ -132,7 +133,7 @@ const OnboardingForm = ({ industries }) => {
                 </Select>
                 {errors.subIndustry && (
                   <p className={"text-sm text-red-500"}>
-                    {"Please Select Specialization"}
+                    {"Please Select Specialization!"}
                   </p>
                 )}
               </div>
