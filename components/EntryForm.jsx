@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { parse, format } from "date-fns";
 import { entrySchema } from "../lib/schema";
 import { Button } from "./ui/button";
 import { Loader2, PlusCircle, Sparkles, X } from "lucide-react";
@@ -33,7 +32,7 @@ const EntryForm = ({ type, entries, onChange }) => {
     watch,
     setValue,
   } = useForm({
-    resolver: zodResolver(entrySchema),
+    resolvers: zodResolver(entrySchema),
     defaultValues: {
       title: "",
       organization: "",
@@ -65,32 +64,21 @@ const EntryForm = ({ type, entries, onChange }) => {
 
   const formatDisplayDate = (dateString) => {
     if (!dateString) return "";
-    try {
-      const date = parse(dateString, "yyyy-MM", new Date());
-      return format(date, "MMM yyyy");
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return dateString; // Return original if parsing fails
-    }
+    const date = parse(dateString, "yyyy-MM", new Date());
+    return format(date, "MMM yyyy");
   };
 
   const handleAdd = handleValidation((data) => {
-    try {
-      const formattedEntry = {
-        ...data,
-        startDate: formatDisplayDate(data.startDate),
-        endDate: data.current ? "" : formatDisplayDate(data.endDate),
-      };
+    const formattedEntry = {
+      ...data,
+      startDate: formatDisplayDate(data.startDate),
+      endDate: data.current ? "" : formatDisplayDate(data.endDate),
+    };
 
-      onChange([...entries, formattedEntry]);
+    onChange([...entries, formattedEntry]);
 
-      reset();
-      setIsAdding(false);
-      toast.success(`${type} entry added successfully!`);
-    } catch (error) {
-      console.error("Error adding entry:", error);
-      toast.error("Failed to add entry. Please try again.");
-    }
+    reset();
+    setIsAdding(false);
   });
   const handleDelete = (index) => {
     const newEntries = entries.filter((_, i) => i !== index);
@@ -209,7 +197,7 @@ const EntryForm = ({ type, entries, onChange }) => {
               </div>
             </div>
 
-            <div>
+            <div className={"flex gap-2"}>
               <input
                 type={"checkbox"}
                 id={"current"}
