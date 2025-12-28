@@ -8,6 +8,7 @@ import {
   FileText,
   GraduationCap,
   LayoutDashboard,
+  LucideLayoutDashboard,
   PenBox,
   StarsIcon,
 } from "lucide-react";
@@ -18,6 +19,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { checkUser } from "@/lib/checkUser";
+import { getUserOnboardingStatus } from "@/actions/user";
+
+const { isOnboarded } = await getUserOnboardingStatus();
 
 const Header = async () => {
   await checkUser();
@@ -44,12 +48,21 @@ const Header = async () => {
 
         <div className={"flex items-center space-x-2 md:space-x-4"}>
           <SignedIn>
-            <Link href={"/dashboard"}>
-              <Button variant={"outline"}>
-                <LayoutDashboard className={"h-4 w-4"} />
-                <span className={"hidden md:block"}>Dashboard</span>
-              </Button>
-            </Link>
+            {isOnboarded ? (
+              <Link href={"/dashboard"}>
+                <Button variant={"outline"}>
+                  <LayoutDashboard className={"h-4 w-4"} />
+                  <span className={"hidden md:block"}>Dashboard</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link href={"/onboarding"}>
+                <Button variant={"outline"}>
+                  <LucideLayoutDashboard className={"h-4 w-4"} />
+                  <span className={"hidden md:block heading"}>Onboarding</span>
+                </Button>
+              </Link>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -66,15 +79,15 @@ const Header = async () => {
                     <span>Build Resume</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href={"/ai-cover-letter"}
-                    className={"flex items-center gap-2"}
-                  >
-                    <PenBox className={"h-4 w-4"} />
-                    <span>Cover Letter</span>
-                  </Link>
-                </DropdownMenuItem>
+                {/*<DropdownMenuItem>*/}
+                {/*  <Link*/}
+                {/*    href={"/ai-cover-letter"}*/}
+                {/*    className={"flex items-center gap-2"}*/}
+                {/*  >*/}
+                {/*    <PenBox className={"h-4 w-4"} />*/}
+                {/*    <span>Cover Letter</span>*/}
+                {/*  </Link>*/}
+                {/*</DropdownMenuItem>*/}
                 <DropdownMenuItem>
                   <Link
                     href={"/interview"}
