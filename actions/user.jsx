@@ -94,3 +94,29 @@ export async function getUserOnboardingStatus() {
     throw new Error("Failed to check onboarding status");
   }
 }
+
+export async function getUserProfile() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        clerkUserId: userId,
+      },
+      select: {
+        industry: true,
+        experience: true,
+        skills: true,
+        bio: true,
+      },
+    });
+
+    if (!user) throw new Error("user not found");
+
+    return user;
+  } catch (error) {
+    console.error("Error fetching user profile:", error.message);
+    throw new Error("Failed to fetch user profile");
+  }
+}

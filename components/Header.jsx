@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LucideLayoutDashboard,
   PenBox,
+  Search,
   StarsIcon,
 } from "lucide-react";
 import {
@@ -95,6 +96,15 @@ const Header = async () => {
                   >
                     <GraduationCap className={"h-4 w-4"} />
                     <span>Interview Prep</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href={"/job-applications"}
+                    className={"flex items-center gap-2"}
+                  >
+                    <Search className={"h-4 w-4"} />
+                    <span>Job Applications</span>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
