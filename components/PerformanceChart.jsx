@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { format } from "date-fns";
 import {
   Card,
@@ -21,11 +21,9 @@ import {
 } from "recharts";
 
 const PerformanceChart = ({ assessments }) => {
-  const [chartData, setChartData] = useState([]);
-
-  useEffect(() => {
+  const computedChartData = useMemo(() => {
     if (assessments && Array.isArray(assessments) && assessments.length > 0) {
-      const formattedData = assessments
+      return assessments
         .filter(
           (assessment) =>
             assessment && assessment.createdAt && assessment.quizScore != null,
@@ -34,10 +32,8 @@ const PerformanceChart = ({ assessments }) => {
           date: format(new Date(assessment.createdAt), "MMM dd"),
           score: Number(assessment.quizScore) || 0,
         }));
-
-      setChartData(formattedData);
     } else {
-      setChartData([]);
+      return [];
     }
   }, [assessments]);
 
@@ -58,7 +54,7 @@ const PerformanceChart = ({ assessments }) => {
         <CardContent>
           <div className={"h-[300px]"}>
             <ResponsiveContainer width={"100%"} height={"100%"}>
-              <LineChart data={chartData}>
+              <LineChart data={computedChartData}>
                 <CartesianGrid strokeDasharray={"3 3"} />
                 <XAxis dataKey={"date"} />
                 <YAxis domain={[0, 100]} />

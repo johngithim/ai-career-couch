@@ -12,6 +12,7 @@ import {
   PenBox,
   Search,
   StarsIcon,
+  Briefcase,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -22,9 +23,14 @@ import {
 import { checkUser } from "@/lib/checkUser";
 import { getUserOnboardingStatus } from "@/actions/user";
 
-const { isOnboarded } = await getUserOnboardingStatus();
-
 const Header = async () => {
+  let isOnboarded = false;
+  try {
+    const onboardingStatus = await getUserOnboardingStatus();
+    isOnboarded = onboardingStatus.isOnboarded;
+  } catch (error) {
+    // User is not authenticated, isOnboarded remains false
+  }
   await checkUser();
   return (
     <header
@@ -96,6 +102,15 @@ const Header = async () => {
                   >
                     <GraduationCap className={"h-4 w-4"} />
                     <span>Interview Prep</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href={"/job-updates"}
+                    className={"flex items-center gap-2"}
+                  >
+                    <Briefcase className={"h-4 w-4"} />
+                    <span>Job Updates</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
