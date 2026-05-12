@@ -3,7 +3,7 @@ import { features } from "../data/features";
 import { Card, CardContent } from "../components/ui/card";
 import { howItWorks } from "../data/howItWorks";
 import { testimonial } from "../data/testimonial";
-import { ArrowRight, Car } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { faqs } from "../data/faqs";
 import {
